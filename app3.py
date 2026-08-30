@@ -51,30 +51,13 @@ import numpy as np
 from matplotlib import font_manager
 
 # ==========================================
-# 層面 ②：注入自訂 CSS（引入 Google Fonts 思源黑體）
-# ==========================================
-st.html(
-    """
-    <link rel="preconnect" href="https://googleapis.com">
-    <link rel="preconnect" href="https://gstatic.com" crossorigin>
-    <link href="https://googleapis.com/css2?family=Noto+Sans+TC:wght@400;700&display=swap" rel="stylesheet">
-    
-    <style>
-    html, body, [data-testid="stWidgetLabel"], .stmarkdown, p, h1, h2, h3, h4, h5, h6 {
-        font-family: 'Noto Sans TC', sans-serif !important;
-    }
-    </style>
-    """,
-)
-
-# ==========================================
 # 層面 ③：繪圖庫單獨設定（Matplotlib 中文字型）
 # ==========================================
 # 自訂一個引導檢查函數，確保在 Streamlit Cloud 執行時能找到字型
 def init_matplotlib_font():
     current_dir = os.path.dirname(os.path.abspath(__file__))
     # 假設您把字型放在專案根目錄下的 fonts 資料夾中
-    font_path = os.path.join(current_dir, "fonts", "NotoSansTC-Regular.ttf")
+    font_path = os.path.join(current_dir, "fonts", "MSJH.TTC")
 
     if os.path.exists(font_path):
         font_manager.fontManager.addfont(font_path)
