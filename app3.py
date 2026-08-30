@@ -16,7 +16,6 @@ from reportlab.platypus import Paragraph, SimpleDocTemplate, Spacer, Table, Tabl
 from reportlab.graphics.shapes import Drawing, Rect, Line
 import smtplib
 import streamlit as st
-
 # 引入 Google Drive API 套件 (若未安裝會提示，但不影響主程式運作)
 try:
   from google.oauth2 import service_account
