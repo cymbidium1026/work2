@@ -53,16 +53,12 @@ st.sidebar.header("🎨 驗收單樣式與字型設定")
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
-# 1. 預設字型名稱
+
 FONT_NAME = "Helvetica"
 
-# 2. 定義可選字型與路徑
-font_options = {
-    "微軟正黑體": os.path.join(BASE_DIR, "fonts", "MSJH.TTC"),
-    "標楷體": os.path.join(BASE_DIR, "fonts", "kaiu.ttf"),
-    "新細明體": os.path.join(BASE_DIR, "fonts", "mingliu.ttc"),
-}
-
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+font_options = {"微軟正黑體": os.path.join(BASE_DIR, "fonts", "MSJH.TTC"),
+} 
 # 3. 側邊欄下拉選單 (加上唯一的 key 避免重複 ID 錯誤)
 selected_font_label = st.sidebar.selectbox(
     "選擇 PDF 字型", 
@@ -72,20 +68,6 @@ selected_font_label = st.sidebar.selectbox(
 
 # 4. 取得對應的字型檔案路徑
 font_path = font_options[selected_font_label]
-
-# 5. 註冊字型與容錯處理
-if os.path.exists(font_path):
-    try:
-        pdfmetrics.registerFont(TTFont("CUSTOM_FONT", font_path))
-        FONT_NAME = "CUSTOM_FONT"
-    except Exception as e:
-        st.sidebar.warning(f"字型註冊失敗，將改用預設字型: {e}")
-        FONT_NAME = "Helvetica"
-else:
-    FONT_NAME = "Helvetica"
-    st.sidebar.warning(
-        f"找不到字型檔 {font_path}（雲端環境通常無 Windows 字型），將自動改用預設英文字型 Helvetica。"
-    )
 
 # 6. 其他樣式滑桿設定
 font_size = st.sidebar.slider("內文自訂字型大小", 8, 14, 10, 1)
