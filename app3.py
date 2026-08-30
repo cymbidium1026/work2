@@ -51,6 +51,7 @@ st.title("🧾 專業工程驗收單系統（PDF 與 Excel 雙向驗收管理）
 # ==========================================
 st.sidebar.header("🎨 驗收單樣式與字型設定")
 
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))# 2. 將字型路徑指向專案資料夾底下的 fonts 資料夾與字型檔
 font_options = {
 "微軟正黑體": os.path.join(BASE_DIR, "fonts", "MSJH.TTC"),
 } 
