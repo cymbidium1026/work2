@@ -68,12 +68,18 @@ else:
 # 0. 側邊欄：格式設定與欄寬自訂
 # ==========================================
 st.sidebar.header("🎨 驗收單樣式與字型設定")
-FONT_NAME = "Helvetica"
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-font_options = {"微軟正黑體": os.path.join(BASE_DIR, "fonts", "MSJH.TTC"),
+
+# 1. 預設先給定英文字型（做為找不到字型時的安全防護）
+FONT_NAME = "Helvetica"
+
+# 2. 定義可用字型與路徑
+font_options = {
+    "微軟正黑體": os.path.join(BASE_DIR, "fonts", "MSJH.TTC"),
 } 
-# 3. 側邊欄下拉選單 (加上唯一的 key 避免重複 ID 錯誤)
+
+# 3. 側邊欄下拉選單
 selected_font_label = st.sidebar.selectbox(
     "選擇 PDF 字型", 
     list(font_options.keys()), 
@@ -82,6 +88,19 @@ selected_font_label = st.sidebar.selectbox(
 
 # 4. 取得對應的字型檔案路徑
 font_path = font_options[selected_font_label]
+
+# 5. 💡 關鍵步驟：檢查檔案是否存在並向 ReportLab 註冊中文字型
+if os.path.exists(font_path):
+    try:
+        # 將字型註冊進 ReportLab，並命名為 "CUSTOM_FONT"
+        pdfmetrics.registerFont(TTFont("CUSTOM_FONT", font_path))
+        FONT_NAME = "CUSTOM_FONT"  # 成功載入後，把變數切換為自訂中文字型
+    except Exception as e:
+        st.sidebar.warning(f"字型註冊失敗: {e}")
+        FONT_NAME = "Helvetica"
+else:
+    st.sidebar.error(f"找不到字型檔：{font_path}！請確認您的 GitHub 專案中有建立 fonts 資料夾並上傳 MSJH.TTC。")
+    FONT_NAME = "Helvetica"
 
 # 6. 其他樣式滑桿設定
 font_size = st.sidebar.slider("內文自訂字型大小", 8, 14, 10, 1)
