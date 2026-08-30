@@ -56,6 +56,33 @@ font_options = {
 "微軟正黑體": os.path.join(BASE_DIR, "fonts", "MSJH.TTC"),
 } 
 
+FONT_NAME = "Helvetica"
+font_options = {
+    "微軟正黑體": os.path.join(BASE_DIR, "fonts", "MSJH.TTC"),
+    "標楷體": os.path.join(BASE_DIR, "fonts", "kaiu.ttf"),
+    "新細明體": os.path.join(BASE_DIR, "fonts", "mingliu.ttc"),
+}
+
+selected_font_label = st.sidebar.selectbox(
+    "選擇 PDF 字型", list(font_options.keys())
+)
+font_path = font_options[selected_font_label]
+
+if os.path.exists(font_path):
+    try:
+        pdfmetrics.registerFont(TTFont("CUSTOM_FONT", font_path))
+        FONT_NAME = "CUSTOM_FONT"
+    except Exception as e:
+        st.sidebar.warning(f"字型註冊失敗，將改用預設字型: {e}")
+        FONT_NAME = "Helvetica"
+else:
+    # 如果是在雲端環境 (Linux) 找不到 Windows 字型，自動降級為 Helvetica
+    FONT_NAME = "Helvetica"
+    st.sidebar.warning(
+        f"找不到字型檔 {font_path}（雲端環境通常無 Windows 字型），將自動改用預設英文字型 Helvetica。"
+    )
+
+
 selected_font_label = st.sidebar.selectbox(
     "選擇 PDF 字型", list(font_options.keys())
 )
