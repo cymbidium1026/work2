@@ -68,10 +68,6 @@ else:
 # 0. 側邊欄：格式設定與欄寬自訂
 # ==========================================
 st.sidebar.header("🎨 驗收單樣式與字型設定")
-
-BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-
-
 FONT_NAME = "Helvetica"
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
