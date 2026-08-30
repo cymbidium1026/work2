@@ -53,25 +53,13 @@ st.title("🧾 專業工程驗收單系統（PDF 與 Excel 雙向驗收管理）
 st.sidebar.header("🎨 驗收單樣式與字型設定")
 
 font_options = {
-    "微軟正黑體": "C:/Windows/Fonts/msjh.ttc",
-    "標楷體": "C:/Windows/Fonts/kaiu.ttf",
-    "新細明體": "C:/Windows/Fonts/mingliu.ttc",
-}
+"微軟正黑體": os.path.join(BASE_DIR, "fonts", "MSJH.TTC"),
+} 
 
 selected_font_label = st.sidebar.selectbox(
     "選擇 PDF 字型", list(font_options.keys())
 )
 font_path = font_options[selected_font_label]
-
-if os.path.exists(font_path):
-  pdfmetrics.registerFont(TTFont("CUSTOM_FONT", font_path))
-  FONT_NAME = "CUSTOM_FONT"
-else:
-  FONT_NAME = "Helvetica"
-  st.sidebar.warning(
-      f"找不到字型檔 {font_path}，將自動改用預設英文字型 Helvetica。"
-  )
-
 font_size = st.sidebar.slider("內文自訂字型大小", 8, 14, 10, 1)
 line_spacing = st.sidebar.slider("內文行距 (Leading)", 10, 20, 14, 1)
 title_font_size = st.sidebar.slider("大標題字型大小", 14, 24, 18, 1)
