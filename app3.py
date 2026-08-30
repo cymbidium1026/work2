@@ -68,12 +68,10 @@ else:
 # 0. 側邊欄：格式設定與欄寬自訂
 # ==========================================
 st.sidebar.header("🎨 驗收單樣式與字型設定")
-
-BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-
 # 1. 預設先給定英文字型（做為找不到字型時的安全防護）
 FONT_NAME = "Helvetica"
 
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 # 2. 定義可用字型與路徑
 font_options = {
     "微軟正黑體": os.path.join(BASE_DIR, "fonts", "MSJH.TTC"),
