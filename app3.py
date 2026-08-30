@@ -46,6 +46,24 @@ st.markdown(
 
 st.title("🧾 專業工程驗收單系統（PDF 與 Excel 雙向驗收管理）")
 
+font_options = {
+    "微軟正黑體": os.path.join(BASE_DIR, "fonts", "MSJH.TTC"),
+}
+
+font_path = font_options[selected_font_label]
+
+if os.path.exists(font_path):
+    try:
+        # 註冊為自訂字型名稱
+        pdfmetrics.registerFont(TTFont("CUSTOM_FONT", font_path))
+        FONT_NAME = "CUSTOM_FONT"  # 確保套用到這個名稱
+    except Exception as e:
+        st.sidebar.warning(f"字型註冊失敗: {e}")
+        FONT_NAME = "Helvetica"
+else:
+    st.sidebar.error(f"找不到字型檔：{font_path}，請確認是否有上傳到 GitHub 的 fonts 資料夾！")
+    FONT_NAME = "Helvetica"
+
 # ==========================================
 # 0. 側邊欄：格式設定與欄寬自訂
 # ==========================================
