@@ -48,17 +48,86 @@ st.title("🧾 專業工程驗收單系統（PDF 與 Excel 雙向驗收管理）
 
 import matplotlib.pyplot as plt
 import numpy as np
+import streamlit as st
 from matplotlib import font_manager
 
-# ==========================================
-# 層面 ③：繪圖庫單獨設定（Matplotlib 中文字型）
-# ==========================================
-# 自訂一個引導檢查函數，確保在 Streamlit Cloud 執行時能找到字型
-def init_matplotlib_font():
-    current_dir = os.path.dirname(os.path.abspath(__file__))
-    # 假設您把字型放在專案根目錄下的 fonts 資料夾中
-    font_path = os.path.join(current_dir, "fonts", "MSJH.TTC")
+# 取得字型檔的絕對路徑
+current_dir = os.path.dirname(os.path.abspath(__file__))
+font_path = os.path.join(current_dir, "fonts", "msjh.ttf") # 若是 ttc 請改為 msjh.ttc
 
+# ==========================================
+# 層面 ② + PDF：注入自訂 CSS（改為讀取本地微軟正黑體）
+# ==========================================
+# 由於 Streamlit Cloud 預設沒有此字型，我們必須在 CSS 中透過 @font-face 
+# 將剛剛放入專案的字型檔轉化為網頁與 PDF 都能讀取的字型源。
+st.html(
+    f"""
+    <style>
+    @font-face {{
+        font-family: 'Microsoft JhengHei Custom';
+        src: url('file/{font_path}'); /* 讓 Streamlit 本地檔案作為網頁字型源 */
+    }}
+    
+    /* 1. 網頁一般顯示 */
+    html, body, [data-testid="stWidgetLabel"], .stmarkdown, p, h1, h2, h3, h4, h5, h6, span {{
+        font-family: 'Microsoft JhengHei Custom', 'Microsoft JhengHei', sans-serif !important;
+    }
+    
+    /* 2. 瀏覽器「儲存為 PDF / 列印」時的強制渲染設定 */
+    @media print {{
+        html, body, p, h1, h2, h3, h4, h5, h6, span, div, svg text {{
+            font-family: 'Microsoft JhengHei Custom', 'Microsoft JhengHei', sans-serif !important;
+            -webkit-print-color-adjust: exact !important;
+            print-color-adjust: exact !important;
+        }}
+    }}
+    </style>
+    """,
+)
+
+import os
+import matplotlib.pyplot as plt
+import numpy as np
+from matplotlib import font_manager
+
+# 取得字型檔的絕對路徑
+current_dir = os.path.dirname(os.path.abspath(__file__))
+font_path = os.path.join(current_dir, "fonts", "msjh.ttf") # 若是 ttc 請改為 msjh.ttc
+
+# ==========================================
+# 層面 ② + PDF：注入自訂 CSS（改為讀取本地微軟正黑體）
+# ==========================================
+# 由於 Streamlit Cloud 預設沒有此字型，我們必須在 CSS 中透過 @font-face 
+# 將剛剛放入專案的字型檔轉化為網頁與 PDF 都能讀取的字型源。
+st.html(
+    f"""
+    <style>
+    @font-face {{
+        font-family: 'Microsoft JhengHei Custom';
+        src: url('file/{font_path}'); /* 讓 Streamlit 本地檔案作為網頁字型源 */
+    }}
+    
+    /* 1. 網頁一般顯示 */
+    html, body, [data-testid="stWidgetLabel"], .stmarkdown, p, h1, h2, h3, h4, h5, h6, span {{
+        font-family: 'Microsoft JhengHei Custom', 'Microsoft JhengHei', sans-serif !important;
+    }
+    
+    /* 2. 瀏覽器「儲存為 PDF / 列印」時的強制渲染設定 */
+    @media print {{
+        html, body, p, h1, h2, h3, h4, h5, h6, span, div, svg text {{
+            font-family: 'Microsoft JhengHei Custom', 'Microsoft JhengHei', sans-serif !important;
+            -webkit-print-color-adjust: exact !important;
+            print-color-adjust: exact !important;
+        }}
+    }}
+    </style>
+    """,
+)
+
+# ==========================================
+# 層面 ③：繪圖庫單獨設定（Matplotlib 套用微軟正黑體）
+# ==========================================
+def init_matplotlib_font():
     if os.path.exists(font_path):
         font_manager.fontManager.addfont(font_path)
         prop = font_manager.FontProperties(fname=font_path)
@@ -67,9 +136,8 @@ def init_matplotlib_font():
         st.warning(f"⚠️ 找不到字型檔：{font_path}，圖表可能會出現亂碼！")
         plt.rcParams["font.family"] = "sans-serif"
 
-    # 確保負號（-）能正常顯示，不變豆腐塊
+    # 確保負號（-）正常顯示
     plt.rcParams["axes.unicode_minus"] = False
-
 
 # 執行字型初始化
 init_matplotlib_font()
@@ -78,21 +146,21 @@ init_matplotlib_font()
 # ==========================================
 # Streamlit 網頁內容與繪圖測試
 # ==========================================
-st.title("Streamlit Cloud 中文測試")
-st.write("這裡的文字使用的是 Google Fonts 的**思源黑體**，不會有亂碼。")
+st.title("Streamlit Cloud 微軟正黑體測試")
+st.write("不論是網頁、圖表，還是列印儲存成 **PDF 檔**，現在都會統一顯示微軟正黑體。")
 
-# 建立一個測試用的 Matplotlib 圖表
+# 建立圖表
 fig, ax = plt.subplots()
-x = np.linspace(-10, 10, 100)
-y = np.sin(x)
+x = np.linspace(-5, 5, 100)
+y = x ** 2
 
-ax.plot(x, y, label="正弦波 (Sine)")
-ax.set_title("這是圖表標題（中文測試）")
-ax.set_xlabel("X 軸（包含負數如 -5）")
+ax.plot(x, y, label="二次方曲線")
+ax.set_title("微軟正黑體圖表標題")
+ax.set_xlabel("X 軸（支援負數 -5）")
 ax.set_ylabel("Y 軸")
 ax.legend()
 
-# 在網頁上呈現圖表
+# 顯示圖表
 st.pyplot(fig)
 
 # ==========================================
