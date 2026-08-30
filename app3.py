@@ -51,25 +51,29 @@ st.title("🧾 專業工程驗收單系統（PDF 與 Excel 雙向驗收管理）
 # ==========================================
 st.sidebar.header("🎨 驗收單樣式與字型設定")
 
-BASE_DIR = os.path.dirname(os.path.abspath(__file__))# 2. 將字型路徑指向專案資料夾底下的 fonts 資料夾與字型檔
-font_options = {
-"微軟正黑體": os.path.join(BASE_DIR, "fonts", "MSJH.TTC"),
-} 
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
+# 1. 預設字型名稱
 FONT_NAME = "Helvetica"
+
+# 2. 定義可選字型與路徑
 font_options = {
     "微軟正黑體": os.path.join(BASE_DIR, "fonts", "MSJH.TTC"),
     "標楷體": os.path.join(BASE_DIR, "fonts", "kaiu.ttf"),
     "新細明體": os.path.join(BASE_DIR, "fonts", "mingliu.ttc"),
 }
 
+# 3. 側邊欄下拉選單 (加上唯一的 key 避免重複 ID 錯誤)
 selected_font_label = st.sidebar.selectbox(
     "選擇 PDF 字型", 
     list(font_options.keys()), 
-    key="pdf_font_selector"  # 👈 加上這行唯一的 key
+    key="pdf_font_selector"
 )
 
+# 4. 取得對應的字型檔案路徑
+font_path = font_options[selected_font_label]
 
+# 5. 註冊字型與容錯處理
 if os.path.exists(font_path):
     try:
         pdfmetrics.registerFont(TTFont("CUSTOM_FONT", font_path))
@@ -78,17 +82,12 @@ if os.path.exists(font_path):
         st.sidebar.warning(f"字型註冊失敗，將改用預設字型: {e}")
         FONT_NAME = "Helvetica"
 else:
-    # 如果是在雲端環境 (Linux) 找不到 Windows 字型，自動降級為 Helvetica
     FONT_NAME = "Helvetica"
     st.sidebar.warning(
         f"找不到字型檔 {font_path}（雲端環境通常無 Windows 字型），將自動改用預設英文字型 Helvetica。"
     )
 
-
-selected_font_label = st.sidebar.selectbox(
-    "選擇 PDF 字型", list(font_options.keys())
-)
-font_path = font_options[selected_font_label]
+# 6. 其他樣式滑桿設定
 font_size = st.sidebar.slider("內文自訂字型大小", 8, 14, 10, 1)
 line_spacing = st.sidebar.slider("內文行距 (Leading)", 10, 20, 14, 1)
 title_font_size = st.sidebar.slider("大標題字型大小", 14, 24, 18, 1)
@@ -97,7 +96,6 @@ total_font_size = st.sidebar.slider("總計金額字型大小", 8, 20, 12, 1)
 
 primary_color_hex = st.sidebar.color_picker("表格標題背景顏色", "#F2F2F2")
 text_color_hex = st.sidebar.color_picker("文字顏色", "#000000")
-
 # ------------------------------------------
 # 📐 表格欄寬手動調整設定
 # ------------------------------------------
