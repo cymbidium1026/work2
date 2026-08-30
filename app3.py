@@ -64,9 +64,11 @@ font_options = {
 }
 
 selected_font_label = st.sidebar.selectbox(
-    "選擇 PDF 字型", list(font_options.keys())
+    "選擇 PDF 字型", 
+    list(font_options.keys()), 
+    key="pdf_font_selector"  # 👈 加上這行唯一的 key
 )
-font_path = font_options[selected_font_label]
+
 
 if os.path.exists(font_path):
     try:
