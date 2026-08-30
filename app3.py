@@ -95,42 +95,10 @@ ax.legend()
 # 在網頁上呈現圖表
 st.pyplot(fig)
 
-
-
-
 # ==========================================
 # 0. 側邊欄：格式設定與欄寬自訂
 # ==========================================
-st.sidebar.header("🎨 驗收單樣式與字型設定")
-FONT_NAME = "Helvetica"
 
-# 💡 必須先定義 BASE_DIR，下面才能用 os.path.join 組合路徑！
-BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-
-font_options = {
-    "微軟正黑體": os.path.join(BASE_DIR, "fonts", "MSJH.TTC"),
-}
-
-selected_font_label = st.sidebar.selectbox(
-    "選擇 PDF 字型", 
-    list(font_options.keys()), 
-    key="pdf_font_selector"
-)
-
-# 取得對應的字型檔案路徑
-font_path = font_options[selected_font_label]
-
-# 💡 關鍵修正：必須在這裡向 ReportLab 註冊字型，中文才能正常顯示！
-if os.path.exists(font_path):
-    try:
-        pdfmetrics.registerFont(TTFont("CUSTOM_FONT", font_path))
-        FONT_NAME = "CUSTOM_FONT"
-    except Exception as e:
-        st.sidebar.warning(f"字型註冊失敗: {e}")
-        FONT_NAME = "Helvetica"
-else:
-    st.sidebar.error("請確認您的 GitHub 專案中有建立 fonts 資料夾並上傳 MSJH.TTC。")
-    FONT_NAME = "Helvetica"
 # 6. 其他樣式滑桿設定
 font_size = st.sidebar.slider("內文自訂字型大小", 8, 14, 10, 1)
 line_spacing = st.sidebar.slider("內文行距 (Leading)", 10, 20, 14, 1)
