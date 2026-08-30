@@ -77,9 +77,8 @@ if os.path.exists(font_path):
         st.sidebar.warning(f"字型註冊失敗: {e}")
         FONT_NAME = "Helvetica"
 else:
-    st.sidebar.error(f"請確認您的 GitHub 專案中有建立 fonts 資料夾並上傳 MSJH.TTC。")
+    st.sidebar.error("請確認您的 GitHub 專案中有建立 fonts 資料夾並上傳 MSJH.TTC。")
     FONT_NAME = "Helvetica"
-
 # 6. 其他樣式滑桿設定
 font_size = st.sidebar.slider("內文自訂字型大小", 8, 14, 10, 1)
 line_spacing = st.sidebar.slider("內文行距 (Leading)", 10, 20, 14, 1)
