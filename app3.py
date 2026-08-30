@@ -50,12 +50,17 @@ st.title("🧾 專業工程驗收單系統（PDF 與 Excel 雙向驗收管理）
 # ==========================================
 # 0. 側邊欄：格式設定與欄寬自訂
 # ==========================================
+# ==========================================
+# 0. 側邊欄：格式設定與欄寬自訂
+# ==========================================
 st.sidebar.header("🎨 驗收單樣式與字型設定")
 
+# 取得目前程式所在的資料夾絕對路徑
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+
+# 改用專案內的相對路徑（請確保 GitHub 專案中有建立 fonts 資料夾並放入 msjh.ttc）
 font_options = {
-    "微軟正黑體": "C:/Windows/Fonts/msjh.ttc",
-    "標楷體": "C:/Windows/Fonts/kaiu.ttf",
-    "新細明體": "C:/Windows/Fonts/mingliu.ttc",
+    "微軟正黑體": os.path.join(BASE_DIR, "fonts", "msjh.ttc"),
 }
 
 selected_font_label = st.sidebar.selectbox(
@@ -63,14 +68,19 @@ selected_font_label = st.sidebar.selectbox(
 )
 font_path = font_options[selected_font_label]
 
+# 註冊字型
 if os.path.exists(font_path):
-  pdfmetrics.registerFont(TTFont("CUSTOM_FONT", font_path))
-  FONT_NAME = "CUSTOM_FONT"
+    try:
+        pdfmetrics.registerFont(TTFont("CUSTOM_FONT", font_path))
+        FONT_NAME = "CUSTOM_FONT"
+    except Exception as e:
+        FONT_NAME = "Helvetica"
+        st.sidebar.warning(f"字型註冊發生錯誤: {e}")
 else:
-  FONT_NAME = "Helvetica"
-  st.sidebar.warning(
-      f"找不到字型檔 {font_path}，將自動改用預設英文字型 Helvetica。"
-  )
+    FONT_NAME = "Helvetica"
+    st.sidebar.warning(
+        f"找不到字型檔 ({font_path})。請確認 GitHub 專案根目錄下是否有建立 `fonts` 資料夾並上傳 `msjh.ttc`，將自動改用預設英文字型 Helvetica。"
+    )
 
 font_size = st.sidebar.slider("內文自訂字型大小", 8, 14, 10, 1)
 line_spacing = st.sidebar.slider("內文行距 (Leading)", 10, 20, 14, 1)
