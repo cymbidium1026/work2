@@ -46,6 +46,75 @@ st.markdown(
 
 st.title("🧾 專業工程驗收單系統（PDF 與 Excel 雙向驗收管理）")
 
+import matplotlib.pyplot as plt
+import numpy as np
+from matplotlib import font_manager
+
+# ==========================================
+# 層面 ②：注入自訂 CSS（引入 Google Fonts 思源黑體）
+# ==========================================
+st.html(
+    """
+    <link rel="preconnect" href="https://googleapis.com">
+    <link rel="preconnect" href="https://gstatic.com" crossorigin>
+    <link href="https://googleapis.com/css2?family=Noto+Sans+TC:wght@400;700&display=swap" rel="stylesheet">
+    
+    <style>
+    html, body, [data-testid="stWidgetLabel"], .stmarkdown, p, h1, h2, h3, h4, h5, h6 {
+        font-family: 'Noto Sans TC', sans-serif !important;
+    }
+    </style>
+    """,
+)
+
+# ==========================================
+# 層面 ③：繪圖庫單獨設定（Matplotlib 中文字型）
+# ==========================================
+# 自訂一個引導檢查函數，確保在 Streamlit Cloud 執行時能找到字型
+def init_matplotlib_font():
+    current_dir = os.path.dirname(os.path.abspath(__file__))
+    # 假設您把字型放在專案根目錄下的 fonts 資料夾中
+    font_path = os.path.join(current_dir, "fonts", "NotoSansTC-Regular.ttf")
+
+    if os.path.exists(font_path):
+        font_manager.fontManager.addfont(font_path)
+        prop = font_manager.FontProperties(fname=font_path)
+        plt.rcParams["font.family"] = prop.get_name()
+    else:
+        st.warning(f"⚠️ 找不到字型檔：{font_path}，圖表可能會出現亂碼！")
+        plt.rcParams["font.family"] = "sans-serif"
+
+    # 確保負號（-）能正常顯示，不變豆腐塊
+    plt.rcParams["axes.unicode_minus"] = False
+
+
+# 執行字型初始化
+init_matplotlib_font()
+
+
+# ==========================================
+# Streamlit 網頁內容與繪圖測試
+# ==========================================
+st.title("Streamlit Cloud 中文測試")
+st.write("這裡的文字使用的是 Google Fonts 的**思源黑體**，不會有亂碼。")
+
+# 建立一個測試用的 Matplotlib 圖表
+fig, ax = plt.subplots()
+x = np.linspace(-10, 10, 100)
+y = np.sin(x)
+
+ax.plot(x, y, label="正弦波 (Sine)")
+ax.set_title("這是圖表標題（中文測試）")
+ax.set_xlabel("X 軸（包含負數如 -5）")
+ax.set_ylabel("Y 軸")
+ax.legend()
+
+# 在網頁上呈現圖表
+st.pyplot(fig)
+
+
+
+
 # ==========================================
 # 0. 側邊欄：格式設定與欄寬自訂
 # ==========================================
