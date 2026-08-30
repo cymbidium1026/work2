@@ -68,23 +68,22 @@ else:
 # 0. 側邊欄：格式設定與欄寬自訂
 # ==========================================
 st.sidebar.header("🎨 驗收單樣式與字型設定")
-# 1. 預設先給定英文字型（做為找不到字型時的安全防護）
 FONT_NAME = "Helvetica"
 
+# 💡 必須先定義 BASE_DIR，下面才能用 os.path.join 組合路徑！
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-# 2. 定義可用字型與路徑
+
 font_options = {
     "微軟正黑體": os.path.join(BASE_DIR, "fonts", "MSJH.TTC"),
 } 
 
-# 3. 側邊欄下拉選單
 selected_font_label = st.sidebar.selectbox(
     "選擇 PDF 字型", 
     list(font_options.keys()), 
     key="pdf_font_selector"
 )
 
-# 4. 取得對應的字型檔案路徑
+# 取得對應的字型檔案路徑
 font_path = font_options[selected_font_label]
 
 # 5. 💡 關鍵步驟：檢查檔案是否存在並向 ReportLab 註冊中文字型
